@@ -41,25 +41,31 @@
 
                         <select name="receiver" id="receiver" style="width: 200px; height: 50px;">
                         {% for receiver in receivers %}
-                            <option value="" style="font-size: 25px;">
-                                <dd>{{ receiver.adress  }}&nbsp;&nbsp;({{ receiver.name }}&nbsp;收)&nbsp;&nbsp;{{ receiver.tel }}</dd>
+                            <option value="{{ receiver.id }}" style="font-size: 25px;">
+                                <dd>{{ receiver.address  }}&nbsp;&nbsp;({{ receiver.name }}&nbsp;收)&nbsp;&nbsp;{{ receiver.tel }}</dd>
                             </option>
                         {% endfor %}
                             </select>
 					</dl>
-                    <dl>
-                        <a href="#" style="font-size: 25px; color: #da260e; text-underline: #2D64B3; float: right; margin-right: 100px; ">新增地址</a>
-                    </dl>
 				</div>
                 {% else %}
 				    <div>无曾用联系人</div>
                 {% endif %}
-        <h3 class="common_title2">编辑地址</h3>
-            <div class="site_con">
+                <div>
+                    <dl>
+                        <input type="button" class="info_submit" value="新增地址" style="float: right; margin-right: 50px;" onclick="show_edit_area()"></input>
+                    </dl>
+                    <dl>
+                        <input type="button" class="info_submit" value="使用选中地址" style="float: right; margin-right: 100px" onclick="submit_receiver()"></input>
+                    </dl>
+                </div>
+            <h3 class="common_title2" style="display: none;">编辑地址</h3>
+            <div class="site_con" style="display: none;">
                 <form>
+                    {% csrf_token %}
                     <div class="form_group">
                         <label>收件人：</label>
-                        <input type="text" name="">
+                        <input type="text" name="receiver">
                     </div>
                     <div class="form_group form_group2">
                         <label>详细地址：</label>
@@ -67,14 +73,14 @@
                     </div>
                     <div class="form_group">
                         <label>邮编：</label>
-                        <input type="text" name="">
+                        <input type="text" name="email_num">
                     </div>
                     <div class="form_group">
                         <label>手机：</label>
-                        <input type="text" name="">
+                        <input type="text" name="phone_num">
                     </div>
 
-                    <input type="submit" name="" value="提交" class="info_submit">
+                    <input type="button" name="" value="提交" class="info_submit" id="new_adress_submit" onclick="new_adress()">
                 </form>
             </div>
 		</div>
@@ -86,5 +92,6 @@
 {% endblock %}
 
 {% block extJS %}
-
+    <script type="text/javascript" src="{% static 'app/js/jquery-1.12.4.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'app/js/user_center_site.js' %}"></script>
 {% endblock %}

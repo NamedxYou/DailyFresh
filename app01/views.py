@@ -1,3 +1,5 @@
+import re
+
 from django.http import JsonResponse
 from django.shortcuts import render
 
@@ -132,8 +134,12 @@ def place_order(request):
         user = request.user
         # 拿到当前用户的购物车中所有选中的购物车商品
         carts = Cart.objects.filter(user=user,is_selected=True)
-        # 判断是否有商品
+        path = request.get_full_path()
         data = {}
+        if 'rec_id' in path:
+            rec_id = path.split('=')[1]
+            data['rec_id'] = rec_id
+        # 判断是否有商品
         if carts:
             # 拿到所有商品详情
             cart_details = [cart.to_dict() for cart in carts]
@@ -193,8 +199,23 @@ def user_center_site(request):
             data['receivers'] = ''
         return render(request, 'app/user_center_site.html', data)
     if request.method == 'POST':
-        return ''
-
+        user = request.user
+        name = request.POST.get('name')
+        tel = request.POST.get('tel')
+        email_num = request.POST.get('email_num')
+        address = request.POST.get('address')
+        receiver = ReceiveDetail()
+        receiver.name = name
+        receiver.tel = tel
+        receiver.email_num = email_num
+        receiver.user = user
+        receiver.address = address
+        receiver.save()
+        # 创建新的收货人之后，将创建的收货人id返回
+        data = {}
+        id = receiver.id
+        data['receiver_id'] = id
+        return JsonResponse(data)
 
 
 
